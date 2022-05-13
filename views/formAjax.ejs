@@ -1,0 +1,65 @@
+<%- include("_header") -%>
+
+<h1>Sample Form View</h1>
+
+<p id="message">Please enter your information below and submit the form</p>
+
+<form>
+    <p>
+        <label for="num1">Enter Starting Number:</label>
+        <input type="number" name="num1" id="num1" required>
+    </p>
+    <p>
+        <label for="num2">Enter Ending Number:</label>
+        <input type="number" name="num2" id="num2" required>
+    </p>
+    <p>
+        <label for="inc">Enter Increment: </label>
+        <input type="number" name="inc" id="inc" required>
+    </p>
+    <input type="submit" value="Calculate">
+</form>
+<p id="result"></p>
+
+<script>
+// Typically, if the script is large, we place it in a separate file
+//   For demonstrations, it is included in the same file.
+// Handle form submission
+document.querySelector("form").addEventListener("submit", e => {
+  // Cancel default behavior of sending a synchronous POST request
+  e.preventDefault();
+  // Create a FormData object, passing the form as a parameter
+  const formData = new FormData(e.target);
+  // Send form data to the server with an asynchronous POST request
+  fetch("/formAjax", {
+    method: "POST",
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      var a = document.getElementById("num1").value
+      var b = document.getElementById("num2").value
+      var c = document.getElementById("inc").value
+    
+      var sum = 0;
+      for(let i =1; i <= b;i++ ){
+        if (i % 2 != 0) {
+            sum = sum + i;
+        }
+      }
+
+      
+      var e = sum;
+
+      document.getElementById("result").innerHTML = 
+      `The sum of the numbers ${data.num1} to ${data.num2} incremented by
+       ${data.inc} is ${e}`;
+      //document.getElementById("data.payment").checked = true;
+    })
+    .catch(err => {
+        document.getElementById("message").textContent = `Error: ${err.message}`;
+    });
+});
+</script>
+
+<%- include("_footer") -%>
